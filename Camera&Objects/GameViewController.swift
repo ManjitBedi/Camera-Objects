@@ -12,11 +12,12 @@ import SceneKit
 
 class GameViewController: UIViewController {
 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // create a new scene
-        let scene = SCNScene(named: "art.scnassets/ship.scn")!
+        let scene = SCNScene(named: "art.scnassets/objects.scn")!
         
         // create and add a camera to the scene
         let cameraNode = SCNNode()
@@ -24,7 +25,7 @@ class GameViewController: UIViewController {
         scene.rootNode.addChildNode(cameraNode)
         
         // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
+        cameraNode.position = SCNVector3(x: 0, y: 0, z: 0)
         
         // create and add a light to the scene
         let lightNode = SCNNode()
@@ -40,11 +41,7 @@ class GameViewController: UIViewController {
         ambientLightNode.light!.color = UIColor.darkGray()
         scene.rootNode.addChildNode(ambientLightNode)
         
-        // retrieve the ship node
-        let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
-        
-        // animate the 3d object
-        ship.run(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
+        cameraNode.run(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 10)))
         
         // retrieve the SCNView
         let scnView = self.view as! SCNView
@@ -53,7 +50,7 @@ class GameViewController: UIViewController {
         scnView.scene = scene
         
         // allows the user to manipulate the camera
-        scnView.allowsCameraControl = true
+        scnView.allowsCameraControl = false
         
         // show statistics such as fps and timing information
         scnView.showsStatistics = true
