@@ -12,55 +12,63 @@ import SceneKit
 
 class GameViewController: UIViewController {
 
+    var object1: SCNNode!
+    var object2: SCNNode!
+    var cameraNode: SCNNode!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // create a new scene
-        let scene = SCNScene(named: "art.scnassets/objects.scn")!
-        
-        // create and add a camera to the scene
-        let cameraNode = SCNNode()
-        cameraNode.camera = SCNCamera()
-        scene.rootNode.addChildNode(cameraNode)
-        
-        // place the camera
-        cameraNode.position = SCNVector3(x: 0, y: 0, z: 0)
-        
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = SCNLightTypeOmni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = SCNLightTypeAmbient
-        ambientLightNode.light!.color = UIColor.darkGray()
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        cameraNode.run(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 10)))
-        
-        // retrieve the SCNView
-        let scnView = self.view as! SCNView
-        
-        // set the scene to the view
-        scnView.scene = scene
-        
-        // allows the user to manipulate the camera
-        scnView.allowsCameraControl = false
-        
-        // show statistics such as fps and timing information
-        scnView.showsStatistics = true
-        
-        // configure the view
-        scnView.backgroundColor = UIColor.black()
-        
-        // add a tap gesture recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        scnView.addGestureRecognizer(tapGesture)
+        if let scene = SCNScene(named: "art.scnassets/objects.scn") {
+            // create and add a camera to the scene
+            let cameraNode = SCNNode()
+            cameraNode.camera = SCNCamera()
+            scene.rootNode.addChildNode(cameraNode)
+            
+            // place the camera
+            cameraNode.position = SCNVector3(x: 0, y: 0, z: 0)
+            self.cameraNode = cameraNode
+            
+            // create and add a light to the scene
+            let lightNode = SCNNode()
+            lightNode.light = SCNLight()
+            lightNode.light!.type = SCNLightTypeOmni
+            lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
+            scene.rootNode.addChildNode(lightNode)
+            
+            // create and add an ambient light to the scene
+            let ambientLightNode = SCNNode()
+            ambientLightNode.light = SCNLight()
+            ambientLightNode.light!.type = SCNLightTypeAmbient
+            ambientLightNode.light!.color = UIColor.darkGray()
+            scene.rootNode.addChildNode(ambientLightNode)
+            
+            // temporary...
+//            cameraNode.run(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 10)))
+            
+            // set references to our objects
+            self.object1 = scene.rootNode.childNode(withName: "shape1", recursively: true)!
+            self.object2 = scene.rootNode.childNode(withName: "shape2", recursively: true)!
+            
+            // retrieve the SCNView
+            let scnView = self.view as! SCNView
+            
+            // set the scene to the view
+            scnView.scene = scene
+            
+            // allows the user to manipulate the camera
+            scnView.allowsCameraControl = false
+            
+            // show statistics such as fps and timing information
+            scnView.showsStatistics = true
+            
+            // configure the view
+            scnView.backgroundColor = UIColor.black()
+            
+            // add a tap gesture recognizer
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+            scnView.addGestureRecognizer(tapGesture)
+        }
     }
     
     func handleTap(_ gestureRecognize: UIGestureRecognizer) {
@@ -86,14 +94,11 @@ class GameViewController: UIViewController {
             SCNTransaction.completionBlock = {
                 SCNTransaction.begin()
                 SCNTransaction.animationDuration = 0.5
-                
                 material.emission.contents = UIColor.black()
-                
                 SCNTransaction.commit()
             }
             
             material.emission.contents = UIColor.red()
-            
             SCNTransaction.commit()
         }
     }
@@ -118,5 +123,20 @@ class GameViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
+    
+    @IBAction func handleSwipeGesture(_ sender: UISwipeGestureRecognizer) {
+        
+        if sender.direction == .left {
+            print("swipe left")
+            self.cameraNode.run(SCNAction.rotateBy(x: 0, y: CGFloat(M_PI), z: 0, duration: 0.5))
+        } else {
+             print("swipe right")
+            self.cameraNode.run(SCNAction.rotateBy(x: 0, y: CGFloat(-M_PI), z: 0, duration: 0.5))
+        }
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        
+        return true
+    }
 }
