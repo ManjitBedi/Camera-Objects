@@ -101,6 +101,7 @@
 						CreatedOnToolsVersion = 8.0;
 						DevelopmentTeam = FPL5896D45;
 						DevelopmentTeamName = "Manjit Bedi";
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -303,6 +304,7 @@
 				78192DBE1D4978FA00C5C9C9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
