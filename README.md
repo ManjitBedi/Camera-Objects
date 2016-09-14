@@ -10,6 +10,7 @@ Swiping left or right will rotate the camera to face one of the objects.
 
 The origami crane model is made by JuanG.  The usage terms for the model are creative commons. 
 
-You can see more of Juan's work on SketchFab.
+You can see more of Juan's work on SketchFab & his web-site.
 
+http://www.juang3d.com
 https://sketchfab.com/juang3d
