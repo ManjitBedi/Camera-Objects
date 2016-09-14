@@ -35,23 +35,32 @@ class GameViewController: UIViewController {
             lookAtConstraint.isGimbalLockEnabled = false
             self.cameraNode.constraints = [lookAtConstraint]
             
-            // now apply some logic
+            // now apply some code to do some animation ...
+            
+            // rotate the 2 models in the scene
             self.object2.runAction(SCNAction.rotateBy(x: 0, y: CGFloat(M_PI), z: 0, duration: 2))
-    
             self.object1.runAction(SCNAction.rotateBy(x: 0, y: CGFloat(M_PI), z: 0, duration: 2)) {
 
+                // now move the camera in closer
                 let lookAtConstraint = SCNLookAtConstraint(target: self.object1)
                 lookAtConstraint.isGimbalLockEnabled = false
                 self.cameraNode.constraints = [lookAtConstraint]
                 
+                // move the camera to a way point & then the fimal destination at the centre of the scene
+                
+                // move to a node in the scene
                 let moveAction = SCNAction.move(to: self.waypointNode.position, duration: 5.0);
                 self.orbitNode.runAction(moveAction){
                     let lookAtConstraint = SCNLookAtConstraint(target: self.object1)
                     lookAtConstraint.isGimbalLockEnabled = true
                     self.cameraNode.constraints = [lookAtConstraint]
+                    
+                    // now move to the final position for the camera
                     let moveAction = SCNAction.move(to: self.centreNode.position, duration: 5.0);
                     self.orbitNode.runAction(moveAction){
                         self.cameraNode.constraints = nil
+                        self.cameraNode.eulerAngles = SCNVector3Make(0, Float(M_PI), 0)
+                        print("\(self.cameraNode.eulerAngles)")
                     }
                 }
             }
@@ -74,7 +83,6 @@ class GameViewController: UIViewController {
             // add a tap gesture recognizer
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
             scnView.addGestureRecognizer(tapGesture)
-
         }
     }
     
@@ -126,11 +134,6 @@ class GameViewController: UIViewController {
         } else {
             return .all
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
     }
     
     @IBAction func handleSwipeGesture(_ sender: UISwipeGestureRecognizer) {
